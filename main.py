@@ -113,18 +113,26 @@ ensure_vector_index(mongo_client["Airline"]["infos"], "vector_index")
 @app.route("/chat", methods=["POST"])
 def process_chat_query():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)  # Add force=True to handle content-type issues
         user_query = data.get("message")
         
         if not user_query:
             return jsonify({"error": "No query provided"}), 400
             
+        # Add debug logging
+        print(f"Received query: {user_query}")
+            
         query_engine = get_query_engine(data_store)
         response = query_engine.query(user_query)
+        
+        # Add debug logging
+        print(f"Generated response: {response}")
+        
         return jsonify({"reply": str(response)})
     except Exception as e:
         print(f"Error processing chat query: {e}")
-        return jsonify({"error": str(e)}), 500
+        # Return more detailed error message
+        return jsonify({"error": f"Failed to process request: {str(e)}"}), 400
 
 @app.route("/support", methods=["POST"])
 def process_support_query():
