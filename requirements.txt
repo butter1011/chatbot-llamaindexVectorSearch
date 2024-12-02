@@ -3,3 +3,4 @@ python-dotenv
 flask-cors 
 pymongo 
 llama-index
+llama-index-vector-stores-mongodb
